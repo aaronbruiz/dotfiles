@@ -1,0 +1,20 @@
+# General Connection
+Host *  # Apply to all hosts
+    User root  # Default user is root if not specified
+    ConnectTimeout 5  # Give up after 5 seconds if can't connect
+    ConnectionAttempts 3  # Retry connection up to 3 times
+    Compression yes  # Enable compression to speed up transfer
+    IPQoS lowdelay  # Request low-latency traffic handling
+    AddressFamily inet  # Force IPv4 (no IPv6)
+    ExitOnForwardFailure yes  # Exit if port forwarding fails
+    StrictHostKeyChecking accept-new  # Auto-accept new host keys
+
+    # Multiplexing settings
+    ControlMaster auto  # Reuse existing SSH connections
+    ControlPersist 10m  # Keep master connection alive for 10 minutes
+    ControlPath ~/.ssh/control-%h-%p-%r  # Path for control socket file
+
+    # Keepalive settings
+    TCPKeepAlive yes  # Enable TCP keepalive packets
+    ServerAliveInterval 3  # Send a keepalive every 3 seconds
+    ServerAliveCountMax 20  # Disconnect after 20 failed keepalives

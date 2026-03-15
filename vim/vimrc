@@ -1,0 +1,60 @@
+let mapleader = ","
+set nocompatible       " Disable compatibility mode
+set encoding=utf-8     " Set UTF-8 encoding
+set showcmd            " Show partial commands
+set mouse=a            " Enable mouse support
+
+set viminfo=%,<800,'10,/50,:100,h,f0,n~/.vim/cache/.viminfo
+"           | |    |   |   |    | |  + viminfo file path
+"           | |    |   |   |    | + file marks 0-9,A-Z 0=NOT stored
+"           | |    |   |   |    + disable 'hlsearch' loading viminfo
+"           | |    |   |   + command-line history saved
+"           | |    |   + search history saved
+"           | |    + files marks saved
+"           | + lines saved each register (new name for ", vi6.2)
+"           + save/restore buffer list
+
+set shiftwidth=4       " Set the number of spaces to use for each step of (auto)indent
+set tabstop=4          " Set the number of spaces that a <Tab> counts for
+set expandtab          " Insert spaces instead of tabs
+set autoindent         " Autoindent for new lines
+set backspace=eol,start,indent  " Allow backspacing over end of line, start of insert, and auto-indent
+set whichwrap+=<,>,h,l " Allow left/right cursor keys to move to the previous/next line when at line start/end
+set ignorecase         " Ignore case when searching
+set smartcase          " Smart search: override 'ignorecase' if the search pattern has uppercase letters
+set wildmenu           " Autocompletition menu
+set splitbelow splitright  " Place new window to bottom or right
+set path+=**           " Search down into subfolders, provides tab-completion for all file-related tasks
+
+" Appearance
+set title
+set number relativenumber   " Show line numbers
+set cursorline              " Highlight the current line
+set cursorlineopt=number    " Show number in cursor line
+set ruler                   " Show cursor position
+highlight LineNr ctermfg=DarkGray guifg=#5c5c5c
+highlight CursorLineNr cterm=NONE ctermfg=White 
+
+augroup commenting_blocks_of_code
+  autocmd!
+  autocmd FileType c,cpp,java,scala,go,rust let b:comment_leader = '// '
+  autocmd FileType sh,ruby,python let b:comment_leader = '# '
+  autocmd FileType conf,fstab let b:comment_leader = '# '
+  autocmd FileType tex let b:comment_leader = '% '
+  autocmd FileType mail let b:comment_leader = '> '
+  autocmd FileType vim let b:comment_leader = '" '
+augroup END
+
+" Map keys for commenting and uncommenting
+noremap <silent> ,c :execute 'normal! I' . escape(b:comment_leader, '\/')<CR>
+" noremap <silent> ,u :execute 'normal! ^' . substitute(getline('.'), '^' . escape(b:comment_leader, '\/'), '', '')<CR>
+
+
+" WSL yank support
+let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
+if executable(s:clip)
+    augroup WSLYank
+        autocmd!
+        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
+    augroup END
+endif

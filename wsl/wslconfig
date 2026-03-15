@@ -1,0 +1,8 @@
+# Place it in %userprofile%/.wslconfig
+[wsl2]
+memory=2GB
+swap=8GB
+
+[experimental]
+autoMemoryReclaim=gradual
+sparseVhd=true

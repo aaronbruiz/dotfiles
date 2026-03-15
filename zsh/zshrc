@@ -1,0 +1,124 @@
+# START BENCHMARK
+if [[ "${ZSH_BENCHMARK:l}" == "yes" ]]; then
+    zmodload zsh/datetime 2>/dev/null
+    zmodload zsh/zprof 2>/dev/null
+    typeset -g ZSH_BENCHMARK_START=$EPOCHREALTIME
+fi
+
+# Enable colors and change prompt:
+autoload -U colors && colors
+#PS1="%B%{$fg[white]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[white]%}]%{$reset_color%}$%b "
+PS1="%B%{$fg[white]%}[%{$fg[green]%}%n %{$reset_color%}in %{$fg[magenta]%}%~%{$fg[white]%}]%{$reset_color%}$%b "
+
+# History in cache directory:
+HISTFILE=$HOME/.cache/zsh/history
+HISTSIZE=10000
+SAVEHIST="$HISTSIZE"
+HISTORY_IGNORE='(rm *|rf *)'
+setopt inc_append_history
+setopt inc_append_history_time
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+
+# If only Dir path, cd there
+setopt autocd
+
+# Basic auto/tab complete:
+ZCOMPCACHE="$HOME/.cache/zsh/zcompcache"
+mkdir -p "$ZCOMPCACHE"
+
+autoload -U compinit
+zstyle ':completion:*' menu select
+zstyle ':completion:*' increment yes
+zstyle ':completion:*' use-cache true
+zstyle ':completion:*' cache-path $ZCOMPCACHE
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' list-dirs-first yes
+zstyle ':completion:*:*:*:*:commands' ignored-patterns '/mnt/c/*'
+zmodload zsh/complist
+
+# Dump
+compinit -C -d $ZCOMPCACHE/.zcompdump 	# Also disalbe global compinit in /etc/zsh/zshrc
+_comp_options+=(globdots)               # Include hidden files.
+unset ZCOMPCACHE
+
+# Aliases
+if [ -f $HOME/.aliasrc ]; then
+    source $HOME/.aliasrc
+fi
+
+# Benchmarking
+
+alias tz='repeat 20 { { /usr/bin/time -p zsh -i -c exit >/dev/null; } 2>&1; } | awk '\''/^real / {x=$2; sum+=x; n++; if(n==1||x<min)min=x; if(n==1||x>max)max=x} END {printf "avg: %.4f s | min: %.4f | max: %.4f\n", sum/n, min, max}'\'''
+zbench() {
+  env ZSH_BENCHMARK=yes zsh -i -c exit
+}
+alias zb='zbench'
+
+# Plugins
+source "$HOME/.local/share/zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" > /dev/null 2>&1
+source "$HOME/.local/share/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh" > /dev/null 2>&1
+# Transient prompt
+TRANSIENT_PROMPT_PROMPT="$PS1"
+TRANSIENT_PROMPT_RPROMPT="$RPROMPT"
+TRANSIENT_PROMPT_TRANSIENT_PROMPT='%F{242}❯%f '
+TRANSIENT_PROMPT_TRANSIENT_RPROMPT=''
+source "$HOME/.local/share/zsh/zsh-transient-prompt/transient-prompt.plugin.zsh" > /dev/null 2>&1
+
+# Keyboard
+bindkey '^[[3~' delete-char  # Delete
+bindkey '^[[Z' reverse-menu-complete  # Shift+Tab
+bindkey '^[[1;5D' backward-word  # Control-Left
+bindkey '^[[1;5C' forward-word  # Control-Right
+
+## History substring
+bindkey '^[[1;2A' history-substring-search-up # or '\eOA'
+bindkey '^[[1;2B' history-substring-search-down # or '\eOB'
+
+#-- From Bashrc
+# Lazy-load lesspipe for better non-text file support; see lesspipe(1)
+less() {
+  unset -f less
+  [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+  command less "$@"
+}
+
+# Load Angular CLI autocompletion.
+#source <(ng completion script)
+
+# END BENCHMARKING
+if [[ "${ZSH_BENCHMARK:l}" == "yes" && -n "${ZSH_BENCHMARK_START:-}" ]]; then
+  typeset -F 3 total_ms
+  total_ms=$(( (EPOCHREALTIME - ZSH_BENCHMARK_START) * 1000 ))
+
+  print
+  print -P "%B%F{yellow}ZSH STARTUP BENCHMARK%f%b"
+  print -P "Total startup time: %F{cyan}${total_ms} ms%f"
+  print
+  if zmodload -e zsh/zprof; then
+    printf '  %-34s %10s %8s %8s\n' "FUNCTION" "TIME(ms)" "CALLS" "LOAD"
+
+    zprof | awk '
+      BEGIN { shown = 0 }
+      /^[[:space:]]*[0-9]+\)/ {
+        name = $NF
+        calls = $2
+        time  = $3
+        pct   = $5
+
+        if (seen[name]++) next
+        if (shown++ >= 10) exit
+
+        if (length(name) > 32) {
+          name = substr(name, 1, 29) "..."
+        }
+
+        printf "  %-32s %10.2f %8s %7.2f%%\n", name, time, calls, pct
+      }
+    '
+  fi
+
+  unset ZSH_BENCHMARK_START total_ms
+fi

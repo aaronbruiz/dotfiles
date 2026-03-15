@@ -1,0 +1,73 @@
+alias py='python3'
+#alias podup='systemctl --user start podman'
+#alias podman='podman-remote'
+#alias docker='podman-remote'
+alias perms="stat -c '%a - %n'"
+alias fetch='fastfetch'
+alias so='du -ahd 1'
+alias rm='rm -rf'
+alias bat='batcat'
+if [ -x /usr/bin/dircolors ]; then
+    #test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto --group-directories-first'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+alias path='echo -e ${PATH//:/\\n}'
+alias l='ls -CF'
+alias ll='ls -alF'
+alias la='ls -A'
+alias lt='ls --human-readable --size -1 -S --classify'
+alias tree='l --tree'
+alias mkdir='mkdir -pv'
+mk() {
+  mkdir --parents "$1" && cd "$1"
+}
+alias count='find . -type f | wc -l'
+alias cpv='rsync -ah --info=progress2'
+alias du='du --human-readable'
+alias time='/usr/bin/time -f "\nElapsed: %E\nCPU: %P\nMax RAM: %M KB\n"'
+
+# Move dir
+alias .="pwd"
+alias ..="cd .."
+alias ...="cd ../.."
+alias .3="cd ../../.."
+alias .4="cd ../../../.."
+alias .5="cd ../../../../.."
+
+# Safety nets
+alias rm='rm -I --preserve-root'
+alias chown='chown --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chgrp='chgrp --preserve-root'
+
+# Update Debian
+alias update='sudo apt-get update && sudo apt-get upgrade'
+
+# Root
+alias root='sudo -i'
+alias su='sudo -i'
+
+# Docker
+alias dl='docker ps -l -q'
+alias dps='docker ps'
+alias di='docker images'
+alias dip="docker inspect --format '{{ .NetworkSettings.IPAddress }}'"
+alias dkd='docker run -d -P'
+alias dki='docker run -i -t -P'
+alias dex='docker exec -i -t'
+
+# Terraform
+alias tf='terraform'
+
+# Ansible
+alias avault="uv tool run --from ansible-core ansible-vault"
+
+# TMUX
+# Start or attach to the default tmux session
+alias tmuxa='tmux has-session -t TMUX 2>/dev/null && tmux attach -t TMUX || tmux new -s TMUX'

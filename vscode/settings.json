@@ -1,0 +1,198 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    // MARK: Common
+    /* extensions:
+        - Material Icon Theme
+        - Dev Containers
+        - WSL
+    */
+    "editor.fontFamily": "'JetBrains Mono', Consolas, 'Courier New', monospace", // 'Geist Mono'
+    "editor.fontWeight": "500",
+    "editor.fontLigatures": true,
+    "editor.linkedEditing": true,
+    "editor.cursorBlinking": "expand",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.guides.bracketPairs": true,
+    "editor.stickyScroll.enabled": true,
+    "editor.detectIndentation": false,
+    "editor.indentSize": "tabSize",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.minimap.enabled": true,
+    "editor.minimap.scale": 1,
+    "editor.codeLens": false,
+    "editor.tabSize": 4,
+    "editor.wordWrap": "on",
+    "editor.wordWrapColumn": 120, // Optional: only wraps after 120 characters
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "breadcrumbs.enabled": false,
+    "breadcrumbs.icons": false,
+    "breadcrumbs.symbolPath": "off",
+    "files.autoSave": "onFocusChange",
+    "git.autofetch": true,
+    "extensions.ignoreRecommendations": true,
+    "github.gitAuthentication": false,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/node_modules": true,
+        "**/.cache": true,
+        "**/.venv": true,
+        "**/.ipynb_checkpoints": true,
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.organizeImports": "always",
+        "source.addMissingImports": "always",
+    },
+    // MARK: JS/TS
+    /* extensions:
+        - Dracula Theme Official
+        - npm Intellisense
+    */
+    "javascript.format.enable": true,
+    "javascript.format.semicolons": "insert",
+    "javascript.validate.enable": true,
+    "javascript.autoClosingTags": true,
+    "javascript.suggest.enabled": true,
+    "javascript.suggest.autoImports": true,
+    "javascript.suggestionActions.enabled": true,
+    "javascript.suggest.completeJSDocs": true,
+    "javascript.inlayHints.parameterNames.enabled": "literals",
+    "javascript.inlayHints.parameterTypes.enabled": true,
+    "javascript.inlayHints.variableTypes.enabled": true,
+    "javascript.inlayHints.functionLikeReturnTypes.enabled": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "[javascript]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.maxTokenizationLineLength": 2500,
+    },
+    "[javascriptreact]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "vscode.typescript-language-features",
+    },
+    // MARK: HTML
+    "html.format.wrapLineLength": 120,
+    "html.format.indentInnerHtml": true,
+    "html.format.wrapAttributes": "auto",
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features",
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.wordWrap": "on"
+    },
+    // MARK: Python
+    /* extensions:
+        - Monokai Pro
+        - Even Better TOML
+        - Python, Pylance
+        - Ruff
+    */
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff",
+    },
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.ruffEnabled": true,
+    "python.analysis.typeCheckingMode": "standard",
+    "notebook.formatOnSave.enabled": true,
+    // MARK: Golang
+    /* extensions:
+        - One Monokai Theme
+        - Go
+        - Golang Snippets
+    */
+    "go.useLanguageServer": true,
+    // "go.lintTool": "golangci-lint",
+    "go.lintOnSave": "package",
+    "[go]": {
+        "editor.insertSpaces": false,
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+        "editor.defaultFormatter": "golang.go"
+    },
+    "gopls": {
+        "formatting.gofumpt": true
+    },
+    "go.testFlags": [
+        "-v"
+    ],
+    // MARK: Rust
+    /* extensions:
+        - Even Better TOML
+        - rust-analyzer
+        - Dependi
+        - CodeLLDB (debug)
+    */
+    "[rust]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    },
+    "rust-analyzer.check.command": "clippy",
+    "rust-analyzer.cargo.features": "all",
+    // MARK: YAML
+    /* extensions:
+        - YAML (Red Hat)
+        - Github Actions
+    */
+    "[yaml]": {
+        "editor.insertSpaces": true,
+        // "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.defaultColorDecorators": "never",
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "redhat.telemetry.enabled": false,
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "yaml.customTags": [
+        "!And",
+        "!If",
+        "!Not",
+        "!Equals",
+        "!Or",
+        "!FindInMap sequence",
+        "!Base64",
+        "!Cidr",
+        "!Ref",
+        "!Sub",
+        "!GetAtt",
+        "!GetAZs",
+        "!ImportValue",
+        "!Select",
+        "!Select sequence",
+        "!Split",
+        "!Join sequence"
+    ],
+    // "yaml.schemas": {
+    //     "https://json.schemastore.org/github-workflow.json": [
+    //         "*.github/workflows/*.yaml",
+    //         "*.github/workflows/*.yml",
+    //     ],
+    //     "https://json.schemastore.org/github-action.json": [
+    //         "action.yaml",
+    //         "action.yml",
+    //     ]
+    // },
+    // MARK: SSH
+    "remote.SSH.remotePlatform": {
+        "percona": "linux",
+        "percona2": "linux"
+    },
+    "workbench.colorTheme": "One Monokai",
+    // Optional MARK: Docker / WSL (uncomment if needed)
+    // "dev.containers.executeInWSLDistro": "podman-machine-default",
+    // "dev.containers.dockerSocketPath": "unix:///mnt/wsl/podman-sockets/podman-machine-default/podman-root.sock",
+    // "dev.containers.dockerPath": "podman-remote",
+    // "docker.environment": {
+    //     "docker.host": "unix:///mnt/wsl/podman-sockets/podman-machine-default/podman-root.sock",
+    //     "docker.dockerPath": "podman-remote"
+    // },
+}
