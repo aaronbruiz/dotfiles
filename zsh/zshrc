@@ -47,9 +47,9 @@ zstyle ':completion:*' use-cache true
 zstyle ':completion:*' cache-path $ZCOMPCACHE
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' list-dirs-first yes
-#zstyle ':completion:*' completer _complete _match _approximate
-#zstyle ':completion:*:approximate:*' max-errors 2 numeric
-#zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:approximate:*' max-errors 2 numeric
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*:*:*:*:commands' ignored-patterns '/mnt/c/*' '/mnt/d/*' '/mnt/e/*'
 
 # Completion dump init every 24H
@@ -84,7 +84,8 @@ alias zb='zbench'
 # Plugins
 source "$HOME/.local/share/zsh/zsh-defer/zsh-defer.plugin.zsh" # Defer non-essential plugins.
 zsh-defer source "$HOME/.local/share/zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
-zsh-defer source "$HOME/.local/share/zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+# zsh-defer source "$HOME/.local/share/zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+zsh-defer eval "$(zsh-patina activate)"
 zsh-defer source "$HOME/.local/share/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh"
 # Transient prompt
 TRANSIENT_PROMPT_PROMPT="$PS1"
