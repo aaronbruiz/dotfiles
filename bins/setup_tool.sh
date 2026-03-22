@@ -13,7 +13,7 @@ declare -A TOOLS=(
 # Terraform installation function
 install_terraform() {
     curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-    sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"  
+    sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
     sudo apt update && sudo apt install terraform
 }
 
@@ -46,15 +46,15 @@ install_go(){
 install_aws() {
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     unzip awscliv2.zip
-    sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli
+    ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli
     rm -rf awscliv2.zip aws
 }
 
 # Kubernetes
 install_kube() {
-    curl -Lo ~/.local/bin/kubectl \
+    curl -Lo /usr/local/bin/kubectl \
 	"https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    chmod +x ~/.local/bin/kubectl
+    chmod +x /usr/local/bin/kubectl
 }
 
 # Interactive selector (only useful if more tools are added later)

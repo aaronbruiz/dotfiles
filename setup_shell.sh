@@ -5,10 +5,10 @@
 # Update SO
 apt update && apt upgrade -y
 # Install packages
-apt install btop unzip fzf tldr bat
+apt install unzip bzip2 fzf tldr
+source $HOME/.dotfiles/bins/sync-tools-gh.sh
 # Install ZSH Plugins
 source $HOME/.dotfiles/zsh/get-zsh-plugins.sh
-
 # Setup configs
 ln -sf $HOME/.dotfiles/aliasrc $HOME/.aliasrc
 ln -sf $HOME/.dotfiles/zsh/zshrc $HOME/.zshrc
