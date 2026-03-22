@@ -5,7 +5,7 @@
 # Update SO
 apt update && apt upgrade -y
 # Install packages
-apt install btop unzip fzf tldr
+apt install btop unzip fzf tldr bat
 # Install ZSH Plugins
 source $HOME/.dotfiles/zsh/get-zsh-plugins.sh
 
@@ -13,6 +13,7 @@ source $HOME/.dotfiles/zsh/get-zsh-plugins.sh
 ln -sf $HOME/.dotfiles/aliasrc $HOME/.aliasrc
 ln -sf $HOME/.dotfiles/zsh/zshrc $HOME/.zshrc
 ln -sf $HOME/.dotfiles/profile $HOME/.profile
+ln -sf $HOME/.dotfiles/tmux/tmux.conf $HOME/.config/tmux/tmux.conf
 
 sed -i 's/^# skip_global_compinit=1$/skip_global_compinit=1/' /etc/zsh/zshrc
 if ! grep -Fxq '[ -f "$HOME/.profile" ] && source "$HOME/.profile"' "/etc/zsh/zprofile"; then

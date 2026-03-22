@@ -5,16 +5,22 @@ if [[ "${ZSH_BENCHMARK:l}" == "yes" ]]; then
     typeset -g ZSH_BENCHMARK_START=$EPOCHREALTIME
 fi
 
+# ZSH Cache dir
+: "${ZSH_CACHE:=${XDG_CACHE_HOME:-$HOME/.cache}/zsh}"
+mkdir -p "$ZSH_CACHE"
+
 # Enable colors and change prompt:
 autoload -U colors && colors
 #PS1="%B%{$fg[white]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[white]%}]%{$reset_color%}$%b "
 PS1="%B%{$fg[white]%}[%{$fg[green]%}%n %{$reset_color%}in %{$fg[magenta]%}%~%{$fg[white]%}]%{$reset_color%}$%b "
 
 # History in cache directory:
-HISTFILE=$HOME/.cache/zsh/history
+HISTFILE="$ZSH_CACHE/history"
 HISTSIZE=10000
 SAVEHIST="$HISTSIZE"
-HISTORY_IGNORE='(rm *|rf *)'
+HISTORY_IGNORE='(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..|rm *|rf *)'
+setopt share_history                # Share history immediately across running tabs/panes
+setopt extended_glob                # Enable advanced pattern matching (needed for IGNORE)
 setopt inc_append_history
 setopt inc_append_history_time
 setopt hist_ignore_all_dups
@@ -25,24 +31,42 @@ setopt hist_reduce_blanks
 # If only Dir path, cd there
 setopt autocd
 
-# Basic auto/tab complete:
-ZCOMPCACHE="$HOME/.cache/zsh/zcompcache"
+# Basic auto/tab completion:
+ZCOMPCACHE="$ZSH_CACHE/zcompcache"
+ZSH_COMPLETION_DUMP="$ZCOMPCACHE/.zcompdump"
+
 mkdir -p "$ZCOMPCACHE"
 
 autoload -U compinit
+zmodload zsh/complist
+_comp_options+=(globdots)           # Include hidden files.
+                                    # Completion behavior
 zstyle ':completion:*' menu select
 zstyle ':completion:*' increment yes
 zstyle ':completion:*' use-cache true
 zstyle ':completion:*' cache-path $ZCOMPCACHE
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' list-dirs-first yes
-zstyle ':completion:*:*:*:*:commands' ignored-patterns '/mnt/c/*'
-zmodload zsh/complist
+#zstyle ':completion:*' completer _complete _match _approximate
+#zstyle ':completion:*:approximate:*' max-errors 2 numeric
+#zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*:*:*:*:commands' ignored-patterns '/mnt/c/*' '/mnt/d/*' '/mnt/e/*'
 
-# Dump
-compinit -C -d $ZCOMPCACHE/.zcompdump 	# Also disalbe global compinit in /etc/zsh/zshrc
-_comp_options+=(globdots)               # Include hidden files.
+# Completion dump init every 24H
+# Also disable global compinit in /etc/zsh/zshrc
+if [[ ! -f "$ZSH_COMPLETION_DUMP" || -n "$ZSH_COMPLETION_DUMP"(#qN.mh+24) ]]; then
+    compinit -i -d "$ZSH_COMPLETION_DUMP"
+    touch "$ZSH_COMPLETION_DUMP"
+else
+    compinit -C -d "$ZSH_COMPLETION_DUMP"
+fi
+# Compile dump for speed
+if [[ ! -f "$ZSH_COMPLETION_DUMP.zwc" || "$ZSH_COMPLETION_DUMP" -nt "$ZSH_COMPLETION_DUMP.zwc" ]]; then
+    zcompile "$ZSH_COMPLETION_DUMP" &!
+fi
+
 unset ZCOMPCACHE
+unset ZSH_COMPLETION_DUMP
 
 # Aliases
 if [ -f $HOME/.aliasrc ]; then
@@ -58,14 +82,16 @@ zbench() {
 alias zb='zbench'
 
 # Plugins
-source "$HOME/.local/share/zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" > /dev/null 2>&1
-source "$HOME/.local/share/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh" > /dev/null 2>&1
+source "$HOME/.local/share/zsh/zsh-defer/zsh-defer.plugin.zsh" # Defer non-essential plugins.
+zsh-defer source "$HOME/.local/share/zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
+zsh-defer source "$HOME/.local/share/zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+zsh-defer source "$HOME/.local/share/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh"
 # Transient prompt
 TRANSIENT_PROMPT_PROMPT="$PS1"
 TRANSIENT_PROMPT_RPROMPT="$RPROMPT"
 TRANSIENT_PROMPT_TRANSIENT_PROMPT='%F{242}❯%f '
 TRANSIENT_PROMPT_TRANSIENT_RPROMPT=''
-source "$HOME/.local/share/zsh/zsh-transient-prompt/transient-prompt.plugin.zsh" > /dev/null 2>&1
+zsh-defer source "$HOME/.local/share/zsh/zsh-transient-prompt/transient-prompt.plugin.zsh"
 
 # Keyboard
 bindkey '^[[3~' delete-char  # Delete

@@ -48,6 +48,11 @@ install_or_update_full_repo() {
 
 main() {
   install_or_update_sparse_repo \
+    "https://github.com/romkatv/zsh-defer.git" \
+    "zsh-defer" \
+    /zsh-defer.plugin.zsh
+
+  install_or_update_sparse_repo \
     "https://github.com/olets/zsh-transient-prompt.git" \
     "zsh-transient-prompt" \
     /transient-prompt.plugin.zsh \
@@ -86,6 +91,7 @@ main() {
   log "Plugins directory: $PLUGINS_DIR"
   log
   log "Add these to your zsh config:"
+  log "  source \"$PLUGINS_DIR/zsh-defer/zsh-defer.plugin.zsh\""
   log "  source \"$PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh\""
   log "  source \"$PLUGINS_DIR/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh\""
   log "  source \"$PLUGINS_DIR/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh\""

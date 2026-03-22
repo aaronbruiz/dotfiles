@@ -2,7 +2,7 @@ let mapleader = ","
 set nocompatible       " Disable compatibility mode
 set encoding=utf-8     " Set UTF-8 encoding
 set showcmd            " Show partial commands
-set mouse=a            " Enable mouse support
+"set mouse=a            " Enable mouse support
 
 set viminfo=%,<800,'10,/50,:100,h,f0,n~/.vim/cache/.viminfo
 "           | |    |   |   |    | |  + viminfo file path
@@ -28,7 +28,7 @@ set path+=**           " Search down into subfolders, provides tab-completion fo
 
 " Appearance
 set title
-set number relativenumber   " Show line numbers
+"set number relativenumber   " Show line numbers
 set cursorline              " Highlight the current line
 set cursorlineopt=number    " Show number in cursor line
 set ruler                   " Show cursor position
@@ -58,3 +58,10 @@ if executable(s:clip)
         autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
     augroup END
 endif
+
+" Group files hiligthing
+augroup Group ShellColors
+  autocmd!
+  autocmd BufRead,BufNewFile *profile set filetype=sh
+augroup END
+
